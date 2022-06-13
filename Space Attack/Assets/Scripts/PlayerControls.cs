@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerControls : MonoBehaviour
 {
@@ -10,22 +11,34 @@ public class PlayerControls : MonoBehaviour
     private float nextFire;
 
     [SerializeField]
+    private GameObject playerExplosionPrefab;
+
+    [SerializeField]
     private int playerLives = 5;
+
+    [SerializeField]
     private int speed = 6;
+
+    [SerializeField]
+    private AudioSource laserShot;
 
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
+
+        laserShot = GetComponent<AudioSource>();
     }
 
     void Update()
     {
         SpaceMovement();
 
+        //Стрельба
         if (Input.GetMouseButtonDown(0))
         {
             if (Time.time > nextFire)
             {
+                laserShot.Play();
                 nextFire = Time.time + fireRate;
                 Instantiate(laserPrefab, transform.position + new Vector3(0, 0.7f, 0), Quaternion.identity);
             }
@@ -38,7 +51,10 @@ public class PlayerControls : MonoBehaviour
 
         if(playerLives == 0)
         {
+            Instantiate(playerExplosionPrefab, transform.position, Quaternion.identity);
             Destroy(this.gameObject);
+
+            SceneManager.LoadScene("GameOver");
         }
     }
 

@@ -6,9 +6,16 @@ public class EnemyControls : MonoBehaviour
 {
     private int enemySpeed = 2;
 
+    [SerializeField]
+    private GameObject enemyExplosionPrefab;
+
+    [SerializeField]
+    private AudioClip explosionSound;
+
+
     void Start()
     {
-        
+       
     }
 
     void Update()
@@ -25,6 +32,9 @@ public class EnemyControls : MonoBehaviour
     {
         if(collision.tag == "Laser")
         {
+
+            Instantiate(enemyExplosionPrefab, transform.position, Quaternion.identity);
+            AudioSource.PlayClipAtPoint(explosionSound, Camera.main.transform.position, 1.0f);
             Destroy(this.gameObject);
         }
         else if(collision.tag == "Player")
@@ -35,7 +45,8 @@ public class EnemyControls : MonoBehaviour
             {
                 playerControls.LifeCount();
             }
-
+            Instantiate(enemyExplosionPrefab, transform.position, Quaternion.identity);
+            AudioSource.PlayClipAtPoint(explosionSound, Camera.main.transform.position, 1.0f);
             Destroy(this.gameObject);
         }
     }
